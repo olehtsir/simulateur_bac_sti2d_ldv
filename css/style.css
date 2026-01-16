@@ -615,6 +615,9 @@ body.dark select,
 body.dark select:focus {
     color: #e8edf7 !important;
 }
+body.dark .select option:checked {
+    background: rgba(91, 124, 255, 0.35) !important;
+}
 
 /* TABLE -> CARDS (PHONE MODE) */
 @media (max-width: 650px) {
