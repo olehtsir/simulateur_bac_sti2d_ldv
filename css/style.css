@@ -32,6 +32,15 @@ body.dark {
 * {
     box-sizing: border-box;
 }
+html,
+body {
+    touch-action: manipulation;
+}
+input,
+select,
+textarea {
+    font-size: 16px;
+}
 
 body {
     margin: 0;
