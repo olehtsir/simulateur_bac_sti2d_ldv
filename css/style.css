@@ -595,6 +595,27 @@ body.dark .alert {
     background: rgba(255, 175, 0, 0.14);
 }
 
+/* =========================================
+   FIX SELECT DROPDOWN IN DARK MODE
+========================================= */
+
+body.dark .select {
+    background: rgba(18, 26, 45, 0.95) !important;
+    color: #e8edf7 !important;
+    border-color: rgba(255, 255, 255, 0.18) !important;
+}
+
+body.dark .select option {
+    background: #0b1020 !important; /* фон списку */
+    color: #e8edf7 !important; /* текст */
+}
+
+/* щоб не було "сірого" тексту */
+body.dark select,
+body.dark select:focus {
+    color: #e8edf7 !important;
+}
+
 /* TABLE -> CARDS (PHONE MODE) */
 @media (max-width: 650px) {
     table {
