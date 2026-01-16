@@ -144,6 +144,15 @@ function clampNote(value) {
     if (value > 20) return 20;
     return value;
 }
+function parseNoteFR(raw) {
+    if (raw === null || raw === undefined) return NaN;
+
+    // прибираємо пробіли + міняємо кому на крапку
+    const cleaned = String(raw).trim().replace(",", ".");
+    if (cleaned === "") return NaN;
+
+    return Number(cleaned);
+}
 
 function calcPoints(note, coeff) {
     return note * coeff;
@@ -245,7 +254,7 @@ function calculateAll() {
         const id = input.dataset.id;
         const coeff = Number(input.dataset.coeff);
 
-        let note = Number(input.value);
+        let note = parseNoteFR(input.value);
 
         // input validation
         if (input.value !== "" && (isNaN(note) || note < 0 || note > 20)) {
