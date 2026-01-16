@@ -103,10 +103,10 @@ function loadTheme() {
 
     if (t === "dark") {
         document.body.classList.add("dark");
-        btn.textContent = "☀️ Claire";
+        btn.textContent = "☀️ Mode clair";
     } else {
         document.body.classList.remove("dark");
-        btn.textContent = "🌙 Sombre";
+        btn.textContent = "🌙 Mode sombre";
     }
 }
 
@@ -525,8 +525,8 @@ function toggleTheme() {
     const isDark = document.body.classList.contains("dark");
     saveTheme(isDark);
     document.getElementById("btn-theme").textContent = isDark
-        ? "☀️ Claire"
-        : "🌙 Sombre";
+        ? "☀️ Mode clair"
+        : "🌙 Mode sombre";
 }
 
 // Scroll helpers
