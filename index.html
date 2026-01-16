@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        <title>Simulateur BAC STI2D - Moyenne, Points & Mention</title>
+        <meta
+            name="description"
+            content="Simulateur BAC STI2D : entrez vos notes /20 et obtenez votre total de points, moyenne finale et mention."
+        />
+
+        <link rel="stylesheet" href="css/style.css" />
+        <link rel="icon" href="images/leonard-de-vinci.ico" />
+    </head>
+
+    <body>
+        <!-- TOP BAR -->
+        <header class="topbar">
+            <div class="topbar-left">
+                <div class="logo">🎓</div>
+                <div>
+                    <h1>Simulateur BAC_STI2D LPO_LDV</h1>
+                    <p class="subtitle">
+                        Notes /20 → Points → Moyenne → Mention
+                    </p>
+                </div>
+            </div>
+
+            <div class="topbar-actions">
+                <button class="btn ghost" id="btn-example">🎲 Exemple</button>
+                <button class="btn ghost" id="btn-copy">📋 Copier</button>
+
+                <button class="btn ghost" id="btn-export">⬇ Exporter</button>
+                <button class="btn ghost" id="btn-import">⬆ Importer</button>
+                <input
+                    type="file"
+                    id="import-file"
+                    accept="application/json"
+                    hidden
+                />
+
+                <button class="btn ghost" id="btn-theme">🌙 Sombre</button>
+                <button class="btn primary" id="btn-calc">Calculer</button>
+                <button class="btn soft" id="btn-reset">Réinitialiser</button>
+            </div>
+        </header>
+
+        <main class="container">
+            <!-- INTRO -->
+            <section class="hero">
+                <div class="hero-card">
+                    <h2>👋 Bienvenue</h2>
+                    <p class="muted">
+                        Remplis tes notes (sur 20). Le site calcule
+                        automatiquement les points, ta moyenne et ta mention.
+                    </p>
+
+                    <details class="help">
+                        <summary>💡 Comment ça marche ?</summary>
+                        <p class="muted">
+                            Points = note × coefficient.<br />
+                            Total général = Terminales (sur 1200) + Contrôle
+                            continu (sur 800) = sur 2000.<br />
+                            Moyenne finale = Total / 100.
+                        </p>
+                    </details>
+                </div>
+            </section>
+
+            <!-- TERMINALES -->
+            <section class="card">
+                <div class="card-title">
+                    <h2>Épreuves terminales</h2>
+                    <span class="pill">Max 1200 pts</span>
+                </div>
+
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Matière</th>
+                                <th class="w-coeff">Coeff</th>
+                                <th class="w-note">Note (/20)</th>
+                                <th class="w-points">Points</th>
+                            </tr>
+                        </thead>
+                        <tbody id="terminales-body"></tbody>
+                    </table>
+                </div>
+
+                <p class="muted tiny">
+                    Astuce: les grosses coeff (PCM, Grand oral, 2I2D) peuvent
+                    changer ton résultat très vite ⚡
+                </p>
+            </section>
+
+            <!-- CC PREMIÈRE -->
+            <section class="card">
+                <div class="card-title">
+                    <h2>Contrôle continu — Première</h2>
+                    <span class="pill">Max 420 pts</span>
+                </div>
+
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Matière</th>
+                                <th class="w-coeff">Coeff</th>
+                                <th class="w-note">Note (/20)</th>
+                                <th class="w-points">Points</th>
+                            </tr>
+                        </thead>
+                        <tbody id="premiere-body"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- CC TERMINALE -->
+            <section class="card">
+                <div class="card-title">
+                    <h2>Contrôle continu — Terminale</h2>
+                    <span class="pill">Max 380 pts</span>
+                </div>
+
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Matière</th>
+                                <th class="w-coeff">Coeff</th>
+                                <th class="w-note">Note (/20)</th>
+                                <th class="w-points">Points</th>
+                            </tr>
+                        </thead>
+                        <tbody id="cc-terminale-body"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- RESULTATS -->
+            <section class="card" id="result-section">
+                <div class="card-title">
+                    <h2>Résultat</h2>
+                    <span class="pill">Sur 2000 pts</span>
+                </div>
+
+                <div class="results-grid">
+                    <div class="stat">
+                        <div class="stat-label">Terminales</div>
+                        <div class="stat-value" id="total-terminales">0</div>
+                        <div class="stat-sub">/ 1200</div>
+                    </div>
+
+                    <div class="stat">
+                        <div class="stat-label">Contrôle continu</div>
+                        <div class="stat-value" id="total-cc">0</div>
+                        <div class="stat-sub">/ 800</div>
+                    </div>
+
+                    <div class="stat">
+                        <div class="stat-label">Total général</div>
+                        <div class="stat-value" id="total-general">0</div>
+                        <div class="stat-sub">/ 2000</div>
+                    </div>
+
+                    <div class="stat highlight">
+                        <div class="stat-label">Moyenne finale</div>
+                        <div class="stat-value" id="moyenne">0.00</div>
+                        <div class="stat-sub">/ 20</div>
+                        <div class="mention" id="mention">—</div>
+                    </div>
+                </div>
+
+                <div class="progress">
+                    <div class="progress-top">
+                        <span class="muted">Progression</span>
+                        <span class="muted" id="progress-text">0%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-fill"></div>
+                    </div>
+                </div>
+
+                <div class="coach" id="coach-box">
+                    <div class="coach-title">🧠 Coach</div>
+                    <div class="coach-text" id="coach-text">
+                        Entre tes notes pour voir ton résultat.
+                    </div>
+                </div>
+
+                <div class="row">
+                    <button class="btn ghost" id="btn-save-history">
+                        ⭐ Ajouter à l’historique
+                    </button>
+                    <button class="btn ghost" id="btn-scroll-top">
+                        ⬆ Haut
+                    </button>
+                </div>
+
+                <p class="muted tiny">Formule: Moyenne = Total / 100</p>
+            </section>
+
+            <!-- OBJECTIF -->
+            <section class="card">
+                <div class="card-title">
+                    <h2>🎯 Objectif (simulateur “quelle note il te faut”)</h2>
+                    <span class="pill">Cible</span>
+                </div>
+
+                <p class="muted">
+                    Choisis une moyenne cible et un sujet, je te dis la note
+                    nécessaire (approx).
+                </p>
+
+                <div class="objectif-grid">
+                    <div>
+                        <label class="label">Objectif moyenne</label>
+                        <select id="target-select" class="select">
+                            <option value="10">10/20 (Admis)</option>
+                            <option value="12">12/20 (Assez Bien)</option>
+                            <option value="14">14/20 (Bien)</option>
+                            <option value="16">16/20 (Très Bien)</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="label">Sujet à améliorer</label>
+                        <select id="subject-select" class="select"></select>
+                    </div>
+
+                    <div class="objectif-actions">
+                        <button class="btn primary" id="btn-objectif">
+                            Calculer l’objectif
+                        </button>
+                    </div>
+                </div>
+
+                <div class="objectif-result" id="objectif-result">
+                    👉 Choisis une cible + une matière.
+                </div>
+            </section>
+
+            <!-- HISTORIQUE -->
+            <section class="card">
+                <div class="card-title">
+                    <h2>📌 Historique</h2>
+                    <span class="pill">Local</span>
+                </div>
+
+                <p class="muted">
+                    Tu peux sauvegarder tes résultats (stockés sur ton
+                    appareil).
+                </p>
+                <div id="history-list" class="history-list">
+                    <div class="muted tiny">
+                        Aucun résultat sauvegardé pour l’instant.
+                    </div>
+                </div>
+
+                <div class="row">
+                    <button class="btn soft" id="btn-clear-history">
+                        🧹 Effacer l’historique
+                    </button>
+                </div>
+            </section>
+
+            <footer class="footer">
+                simulateur-bac-sti2d.fr • HTML/CSS/JS • Mobile-friendly ✅
+            </footer>
+        </main>
+
+        <!-- MOBILE BAR -->
+        <div class="mobile-bar" id="mobile-bar">
+            <div>
+                <div class="mobile-small">Moyenne</div>
+                <div class="mobile-big" id="mobile-moy">0.00</div>
+            </div>
+            <div>
+                <div class="mobile-small">Mention</div>
+                <div class="mobile-big" id="mobile-men">—</div>
+            </div>
+            <button class="btn primary mobile-btn" id="btn-scroll-result">
+                Voir
+            </button>
+        </div>
+
+        <script src="js/script.js"></script>
+    </body>
+</html>
