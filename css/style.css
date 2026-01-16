@@ -698,36 +698,57 @@ body.dark .rank-badge {
 /* TABLE -> CARDS (PHONE MODE) */
 /* ✅ На телефоні прибираємо sticky header */
 /* ✅ MOBILE HEADER: only title + theme + reset */
+/* ✅ MOBILE HEADER: clean + aligned */
 @media (max-width: 760px) {
-    /* header stays on top but smaller */
     .topbar {
         position: sticky;
         top: 0;
+
         padding: 10px 12px;
         gap: 10px;
+
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
     }
 
-    /* make header smaller */
+    /* прибираємо підзаголовок */
     .subtitle {
         display: none;
     }
 
+    /* можна сховати лого щоб було компактніше */
     .logo {
-        display: none; /* якщо хочеш тільки заголовок */
+        display: none;
+    }
+
+    /* ✅ заголовок в 1 рядок + ... */
+    .topbar-left {
+        flex: 1;
+        min-width: 0;
     }
 
     .topbar-left h1 {
-        font-size: 15px;
+        margin: 0;
+        font-size: 14px;
         line-height: 1.1;
+
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 190px; /* можеш змінити 170-220 */
     }
 
-    /* actions in one line */
+    /* ✅ кнопки рівно і красиво */
     .topbar-actions {
+        display: flex;
         flex-wrap: nowrap;
-        gap: 6px;
+        gap: 8px;
+        align-items: center;
+        justify-content: flex-end;
     }
 
-    /* ❌ hide all buttons except theme + reset */
+    /* ❌ ховаємо всі крім теми та reset */
     #btn-example,
     #btn-copy,
     #btn-export,
@@ -736,13 +757,20 @@ body.dark .rank-badge {
         display: none !important;
     }
 
-    /* ✅ keep only theme + reset buttons */
+    /* ✅ однакова висота кнопок */
     #btn-theme,
     #btn-reset {
         display: inline-flex !important;
-        padding: 8px 10px;
+        align-items: center;
+        justify-content: center;
+
+        height: 34px;
+        padding: 0 10px;
         font-size: 12px;
         border-radius: 12px;
+
+        white-space: nowrap;
+        line-height: 1;
     }
 }
 
