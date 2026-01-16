@@ -697,9 +697,52 @@ body.dark .rank-badge {
 
 /* TABLE -> CARDS (PHONE MODE) */
 /* ✅ На телефоні прибираємо sticky header */
+/* ✅ MOBILE HEADER: only title + theme + reset */
 @media (max-width: 760px) {
+    /* header stays on top but smaller */
     .topbar {
-        position: static;
+        position: sticky;
+        top: 0;
+        padding: 10px 12px;
+        gap: 10px;
+    }
+
+    /* make header smaller */
+    .subtitle {
+        display: none;
+    }
+
+    .logo {
+        display: none; /* якщо хочеш тільки заголовок */
+    }
+
+    .topbar-left h1 {
+        font-size: 15px;
+        line-height: 1.1;
+    }
+
+    /* actions in one line */
+    .topbar-actions {
+        flex-wrap: nowrap;
+        gap: 6px;
+    }
+
+    /* ❌ hide all buttons except theme + reset */
+    #btn-example,
+    #btn-copy,
+    #btn-export,
+    #btn-import,
+    #btn-calc {
+        display: none !important;
+    }
+
+    /* ✅ keep only theme + reset buttons */
+    #btn-theme,
+    #btn-reset {
+        display: inline-flex !important;
+        padding: 8px 10px;
+        font-size: 12px;
+        border-radius: 12px;
     }
 }
 
