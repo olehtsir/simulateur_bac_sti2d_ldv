@@ -29,15 +29,38 @@ const ccTerminale = [
     { id: "eps_term", nom: "EPS", coeff: 6 },
 ];
 
+// =====================================================
+// IMPORTANT SUBJECTS (Big impact)
+// =====================================================
+// Рівень важливості + мінімальна “норм” оцінка (threshold)
+const IMPORTANT_SUBJECTS = {
+    pcm: { stars: 3, minNote: 10 }, // coeff 16
+    grand_oral: { stars: 3, minNote: 10 }, // coeff 14
+    "2i2d_ecrit": { stars: 2, minNote: 10 }, // coeff 9
+    "2i2d_prat": { stars: 2, minNote: 10 }, // coeff 7
+    it_prem: { stars: 2, minNote: 10 }, // coeff 8 (можеш прибрати, якщо не хочеш)
+};
+
 const allSubjects = [...terminales, ...ccPremiere, ...ccTerminale];
 
 // =====================================================
 // 2) RENDER TABLE ROW (with data-label for mobile cards)
 // =====================================================
 function createRow(item) {
+    const imp = IMPORTANT_SUBJECTS[item.id];
+
+    const badge = imp
+        ? `<span class="badge-imp">${"⭐".repeat(imp.stars)} Important</span>`
+        : "";
+
     return `
-    <tr>
-      <td data-label="Matière">${item.nom}</td>
+    <tr data-subject="${item.id}">
+      <td data-label="Matière">
+        <div class="subject-cell">
+          <span>${item.nom}</span>
+          ${badge}
+        </div>
+      </td>
       <td data-label="Coeff"><b>${item.coeff}</b></td>
       <td data-label="Note (/20)">
         <input
@@ -228,6 +251,62 @@ function calculateAll() {
         if (isTerminal) totalTerminales += pts;
         else totalCC += pts;
     });
+    // ===========================
+    // IMPORTANT SUBJECTS CHECK
+    // ===========================
+    const missingImportant = [];
+    const lowImportant = [];
+
+    inputs.forEach((input) => {
+        const id = input.dataset.id;
+        const imp = IMPORTANT_SUBJECTS[id];
+        if (!imp) return;
+
+        const row = input.closest("tr");
+        row.classList.add("row-important");
+
+        const raw = input.value.trim();
+        const note = Number(raw);
+
+        // reset classes
+        row.classList.remove("row-missing", "row-low");
+
+        if (raw === "") {
+            row.classList.add("row-missing");
+            missingImportant.push(id);
+            return;
+        }
+
+        if (!isNaN(note) && note < imp.minNote) {
+            row.classList.add("row-low");
+            lowImportant.push(`${id} (${note}/20)`);
+        }
+    });
+
+    // Alert box in results
+    const alertBox = document.getElementById("important-alert");
+    if (alertBox) {
+        if (missingImportant.length === 0 && lowImportant.length === 0) {
+            alertBox.hidden = true;
+        } else {
+            alertBox.hidden = false;
+
+            let msg = "⚠️ Matières importantes : ";
+
+            if (missingImportant.length > 0) {
+                msg += `non remplies → ${missingImportant.join(", ")}. `;
+            }
+
+            if (lowImportant.length > 0) {
+                msg += `faibles → ${lowImportant.join(", ")}. `;
+            }
+
+            msg +=
+                "Conseil : améliore PCM / Grand oral / 2I2D, ça change beaucoup la moyenne 🔥";
+
+            alertBox.textContent = msg;
+        }
+    }
 
     const totalGeneral = totalTerminales + totalCC;
     const moyenne = totalGeneral / 100;

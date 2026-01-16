@@ -542,6 +542,58 @@ body.dark .mobile-bar {
         display: flex;
     }
 }
+/* ===============================
+   IMPORTANT SUBJECTS (Big coeff)
+================================ */
+
+.subject-cell {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.badge-imp {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 8px;
+    border-radius: 999px;
+    font-weight: 900;
+    font-size: 12px;
+    border: 1px solid var(--border);
+    background: rgba(91, 124, 255, 0.1);
+    color: var(--text);
+    white-space: nowrap;
+}
+
+.row-important {
+    background: rgba(91, 124, 255, 0.04);
+}
+
+.row-missing {
+    outline: 2px dashed rgba(255, 175, 0, 0.55);
+    outline-offset: -2px;
+}
+
+.row-low {
+    outline: 2px dashed rgba(255, 87, 87, 0.55);
+    outline-offset: -2px;
+}
+
+.alert {
+    margin-top: 12px;
+    padding: 12px;
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    background: rgba(255, 175, 0, 0.1);
+    font-weight: 800;
+    font-size: 13px;
+    line-height: 1.4;
+}
+body.dark .alert {
+    background: rgba(255, 175, 0, 0.14);
+}
 
 /* TABLE -> CARDS (PHONE MODE) */
 @media (max-width: 650px) {
