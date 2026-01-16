@@ -94,6 +94,8 @@ document.getElementById("cc-terminale-body").innerHTML = ccTerminale
 const STORAGE_NOTES = "sti2d_notes_v2";
 const STORAGE_THEME = "sti2d_theme_v2";
 const STORAGE_HISTORY = "sti2d_history_v1";
+const STORAGE_BEST_MOY = "sti2d_best_moy_v1";
+const STORAGE_BADGE_TIER = "sti2d_badge_tier_v1";
 
 function saveNotes() {
     const inputs = document.querySelectorAll('input[type="number"]');
@@ -154,6 +156,18 @@ function getMention(moyenne) {
     if (moyenne < 14) return "Mention Assez Bien";
     if (moyenne < 16) return "Mention Bien";
     return "Mention Très Bien";
+}
+function getBadgeFromMoyenne(moy) {
+    // Moyenne = totalPoints / 100
+    // рівні можна міняти як хочеш
+    if (moy <= 0) return { tier: 0, text: "🏁 Départ" };
+    if (moy < 8) return { tier: 0, text: "😬 Survivor" };
+    if (moy < 10) return { tier: 1, text: "🛟 Rattrapage" };
+    if (moy < 12) return { tier: 2, text: "✅ Validé" };
+    if (moy < 14) return { tier: 3, text: "🔥 Mention AB" };
+    if (moy < 16) return { tier: 4, text: "😎 Mode Boss" };
+    if (moy < 18) return { tier: 5, text: "👑 Légende" };
+    return { tier: 6, text: "🧠 Génie" };
 }
 
 // Next milestone: how many points needed for next average
@@ -320,6 +334,43 @@ function calculateAll() {
         totalGeneral.toFixed(1);
     document.getElementById("moyenne").textContent = moyenne.toFixed(2);
     document.getElementById("mention").textContent = mention;
+    // ===========================
+    // BADGE MOTIVATION + RECORD
+    // ===========================
+    const badgeEl = document.getElementById("rank-badge");
+    const recordEl = document.getElementById("record-text");
+
+    const badge = getBadgeFromMoyenne(moyenne);
+
+    if (badgeEl) {
+        badgeEl.textContent = badge.text;
+        badgeEl.className = `rank-badge tier-${badge.tier}`;
+    }
+
+    // Animation si nouveau niveau
+    const oldTier = Number(localStorage.getItem(STORAGE_BADGE_TIER) || "-1");
+    if (badge.tier > oldTier && moyenne > 0) {
+        localStorage.setItem(STORAGE_BADGE_TIER, String(badge.tier));
+        if (badgeEl) {
+            badgeEl.classList.add("pulse");
+            setTimeout(() => badgeEl.classList.remove("pulse"), 750);
+        }
+    }
+
+    // Record personnel
+    const best = Number(localStorage.getItem(STORAGE_BEST_MOY) || "0");
+    if (moyenne > best) {
+        localStorage.setItem(STORAGE_BEST_MOY, String(moyenne));
+        if (recordEl && moyenne > 0) {
+            recordEl.textContent = "🏆 Nouveau record personnel !";
+        }
+    } else {
+        if (recordEl && moyenne > 0) {
+            recordEl.textContent = `⭐ Record : ${best.toFixed(2)}/20`;
+        }
+    }
+
+    if (recordEl && moyenne <= 0) recordEl.textContent = "";
 
     // Mobile bar
     document.getElementById("mobile-moy").textContent = moyenne.toFixed(2);
