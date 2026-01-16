@@ -696,6 +696,12 @@ body.dark .rank-badge {
 }
 
 /* TABLE -> CARDS (PHONE MODE) */
+/* ✅ На телефоні прибираємо sticky header */
+@media (max-width: 760px) {
+    .topbar {
+        position: static;
+    }
+}
 
 @media (max-width: 650px) {
     table {
