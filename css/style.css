@@ -817,3 +817,8 @@ body.dark .rank-badge {
         max-width: 140px;
     }
 }
+@media (max-width: 450px) {
+    .topbar-left h1 {
+        display: none; /* можеш змінити 170-220 */
+    }
+}
